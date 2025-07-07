@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 const JWT_SECRET = 'lovesnotso$ba&d';
 
-const fetchuser = (req, res) => {
+const fetchuser = (req, res, next) => {
     const token = req.header('Authorization')?.replace("Bearer ", "");
     if (!token) {
         res.status(401).send({ message: "Please authenticate using a valid token" })
@@ -15,4 +15,4 @@ const fetchuser = (req, res) => {
     }
 };
 
-module.exports = fetchuser;
+module.exports = fetchuser; 
