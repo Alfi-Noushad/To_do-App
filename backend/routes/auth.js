@@ -3,16 +3,16 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 const User = require('../model/User');
-//var fetchuser = require('../middleware/fetchuser');
+var fetchuser = require('../middleware/fetchuser');
 
 const JWT_SECRET = "lovesnotso$ba&d";
 
 
-//ROUTE 1: Creating the User ----> POST "/api/auth/register"
+//ROUTE 1: Creating the User acc----> POST "/api/auth/register"
 
 router.post('/register', async (req,res) => {
     const { username, password } = req.body;
-    const hashed = await bcrypt(password,10);
+    const hashed = await bcrypt.hash(password,10);
     const user = new User({ username, password: hashed });
     await user.save();
     res.json({message: "User has been registered"});
