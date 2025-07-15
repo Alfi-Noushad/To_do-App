@@ -36,7 +36,7 @@ const Login = ({ setToken }) => {
 
 
   return (
-    <div className='container my-5 p-4'>
+    <div className='container p-4'>
       <form onSubmit={(e) => {
         e.preventDefault();
         login(username, password);
