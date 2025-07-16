@@ -8,6 +8,7 @@ import {
   Navigate
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Home from './components/Home';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
     <div>
     <Navbar/>
     <Routes>
-      <Route path='/' />
+      <Route path='/'  element={<Home/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/signup' element={<Signup/>}/>
     </Routes>
