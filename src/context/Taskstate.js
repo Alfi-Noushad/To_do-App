@@ -1,118 +1,122 @@
-import TaskContext from './TaskContext'
-import React, { useState , useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import TaskContext from './TaskContext';
 
-const Taskstate = ({children}) => {
-
+const TaskState = ({ children }) => {
   const host = "http://localhost:5000";
-
 
   const [tasks, setTasks] = useState([]);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPriority, setFilterPriority] = useState("all");
 
-  //fetch task-------------------  --------
-
+  // ------------------- Fetch Tasks -------------------
   const fetchTasks = async () => {
     if (!token) return;
-    const res = await fetch(`${host}/api/auth/tasks`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-
-    });
-    const data = await res.json();
-    setTasks(Array.isArray(data) ? data : data.tasks || []);
-
+    try {
+      const res = await fetch(`${host}/api/auth/tasks`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      setTasks(Array.isArray(data) ? data : data.tasks || []);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
   };
 
   useEffect(() => {
-    if (token)
-      fetchTasks();
-  }, [token])
+    if (token) fetchTasks();
+  }, [token]);
 
-  // add task-----------------------
-
+  // ------------------- Add Task -------------------
   const addTask = async (text) => {
-    const res = await fetch(`${host}/api/auth/tasks`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      },
-      body: JSON.stringify({ text, status: "pending", priority: "medium" })
-    });
-    const newTask = await res.json();
-    setTasks([...tasks, newTask]);
+    try {
+      const res = await fetch(`${host}/api/auth/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ text, status: "pending", priority: "medium" })
+      });
+      const newTask = await res.json();
+      setTasks(prev => [...prev, newTask]);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
-
-  //delete task----------------------------
-
-
+  // ------------------- Delete Task -------------------
   const deleteTask = async (id) => {
-    await fetch(`${host}/api/auth/tasks/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    setTasks(tasks.filter(task => task._id !== id));
+    try {
+      await fetch(`${host}/api/auth/tasks/${id}`, {
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setTasks(prev => prev.filter(task => task._id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
-
-  //update task-----------------------------------
-
+  // ------------------- Update Task Status -------------------
   const updateTaskStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === "pending" ? "completed" : "pending";
-    const res = await fetch(`${host}/api/auth//tasks/${id}/status`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ status: newStatus })
-    });
-    const updatedTask = await res.json();
-    setTasks(tasks.map(task => task._id === id ? updatedTask : task));
+    try {
+      const res = await fetch(`${host}/api/auth/tasks/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const updatedTask = await res.json();
+      setTasks(prev => prev.map(task => task._id === id ? updatedTask : task));
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
   };
 
-
-
+  // ------------------- Update Task Priority -------------------
   const updateTaskPriority = async (id, newPriority) => {
-    const res = await fetch(`${host}/api/auth//tasks/${id}/priority`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ priority: newPriority })
-    });
-    const updatedTask = await res.json();
-    setTasks(tasks.map(task => task._id === id ? updatedTask : task));
+    try {
+      const res = await fetch(`${host}/api/auth/tasks/${id}/priority`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ priority: newPriority })
+      });
+      const updatedTask = await res.json();
+      setTasks(prev => prev.map(task => task._id === id ? updatedTask : task));
+    } catch (error) {
+      console.error("Error updating task priority:", error);
+    }
   };
 
-
-  //set up the filter system to choose--------------
-
+  // ------------------- Filtered Tasks -------------------
   const filteredTasks = tasks.filter(
     task =>
       (filterStatus === "all" || task.status === filterStatus) &&
       (filterPriority === "all" || task.priority === filterPriority)
   );
 
-
-  //logot state
-
+  // ------------------- Logout -------------------
   const logout = () => {
-  setToken("");
-  localStorage.removeItem("token");
-  setTasks([]);
-};
-
-
-
-
+    setToken("");
+    localStorage.removeItem("token");
+    setTasks([]);
+  };
 
   return (
-    <TaskContextProvider value={{
+    <TaskContext.Provider value={{
       tasks, setTasks,
       token, setToken,
       filterStatus, setFilterStatus,
@@ -122,7 +126,8 @@ const Taskstate = ({children}) => {
       logout
     }}>
       {children}
-    </TaskContextProvider>)
-}
+    </TaskContext.Provider>
+  );
+};
 
-export default Taskstate;
+export default TaskState;
