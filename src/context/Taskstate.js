@@ -13,11 +13,10 @@ const TaskState = ({ children }) => {
   const fetchTasks = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${host}/api/auth/tasks`, {
+      const res = await fetch(`${host}/api/text/tasks`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+           Authorization: `Bearer ${token}`
         }
       });
       const data = await res.json();
@@ -34,7 +33,7 @@ const TaskState = ({ children }) => {
   // ------------------- Add Task -------------------
   const addTask = async (text) => {
     try {
-      const res = await fetch(`${host}/api/auth/tasks`, {
+      const res = await fetch(`${host}/api/text/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +51,7 @@ const TaskState = ({ children }) => {
   // ------------------- Delete Task -------------------
   const deleteTask = async (id) => {
     try {
-      await fetch(`${host}/api/auth/tasks/${id}`, {
+      await fetch(`${host}/api/text/tasks/${id}`, {
         method: "DELETE",
         headers: {
           'Authorization': `Bearer ${token}`
@@ -68,7 +67,7 @@ const TaskState = ({ children }) => {
   const updateTaskStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === "pending" ? "completed" : "pending";
     try {
-      const res = await fetch(`${host}/api/auth/tasks/${id}/status`, {
+      const res = await fetch(`${host}/api/text/tasks/${id}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +85,7 @@ const TaskState = ({ children }) => {
   // ------------------- Update Task Priority -------------------
   const updateTaskPriority = async (id, newPriority) => {
     try {
-      const res = await fetch(`${host}/api/auth/tasks/${id}/priority`, {
+      const res = await fetch(`${host}/api/text/tasks/${id}/priority`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
