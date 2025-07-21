@@ -1,10 +1,16 @@
 import React from 'react'
-import {
-  BrowserRouter as Router,
-  Link
-} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import TaskContext from '../context/TaskContext';
+import { useContext } from 'react';
 
 const Navbar = () => {
+    const { token, logout } = useContext(TaskContext);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
     return (
         <div>
             <nav className="navbar navbar-expand-lg bg-body-tertiary bg-black">
@@ -14,12 +20,20 @@ const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/signup">Signup</Link>
-                        </li>
-                        <li className="nav-item mx-1">
-                            <Link className="nav-link" to="/login">Login</Link>
-                        </li>
+                        {!token ? (
+                            <>
+                                <li className="nav-item">
+                                    <Link className="nav-link text-white" to="/signup">Signup</Link>
+                                </li>
+                                <li className="nav-item mx-1">
+                                    <Link className="nav-link text-white" to="/login">Login</Link>
+                                </li>
+                            </>
+                        ) : (
+                            <li className="nav-item mx-1">
+                                <button onClick={handleLogout} className="btn btn-danger">Logout</button>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </nav>

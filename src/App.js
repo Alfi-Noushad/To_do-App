@@ -10,20 +10,29 @@ import {
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Taskstate from './context/Taskstate';
+import TaskContext from './context/TaskContext';
+import { useContext } from 'react';
 
+function AppContent() {
+  const { token } = useContext(TaskContext); // ✅ Safe to use context here
+
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={token ? <Home /> : <Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </>
+  );
+}
 
 function App() {
   return (
     <Taskstate>
       <Router>
-        <div>
-          <Navbar />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/signup' element={<Signup />} />
-          </Routes>
-        </div>
+        <AppContent />
       </Router>
     </Taskstate>
   );

@@ -111,7 +111,7 @@ const TaskState = ({ children }) => {
   const logout = () => {
     setToken("");
     localStorage.removeItem("token");
-    setTasks([]);
+    setToken(null);
   };
 
   return (
