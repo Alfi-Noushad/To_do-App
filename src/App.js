@@ -14,7 +14,7 @@ import TaskContext from './context/TaskContext';
 import { useContext } from 'react';
 
 function AppContent() {
-  const { token } = useContext(TaskContext); // ✅ Safe to use context here
+  const { token } = useContext(TaskContext); 
 
   return (
     <>
