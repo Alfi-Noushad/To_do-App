@@ -26,7 +26,7 @@ const Home = () => {
         }} className='mb-6 flex gap-2 justify-center' >
 
           <input type="text" placeholder='Add a Task' className='border-2 p-3 border-grey-100 rounded-2xl w-2/3 focus:outline-none focus:ring-grey-400' />
-          <button className='px-6 py-2 bg-blue-300 hover:bg-blue-500 text-white font-bold rounded-lg transition-colors duration-200'>Add</button>
+          <button className='px-6 py-2 bg-blue-300 hover:bg-blue-500 text-white font-bold rounded-3xl transition-colors duration-200'>Add</button>
         </form>
         <div className='mb-6 flex gap-3 justify-center'>
           <select
